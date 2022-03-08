@@ -15,6 +15,7 @@ export default function ListItem({
   priceChangePercentage7d,
   logoUrl,
 }) {
+  const priceChangeColor = priceChangePercentage7d > 0 ? "green" : "red";
   return (
     <TouchableOpacity>
       <View style={styles.itemWrapper}>
@@ -29,18 +30,22 @@ export default function ListItem({
 
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>{name}</Text>
-          <Text style={styles.subTitle}>{symbol}</Text>
+          <Text style={styles.subTitle}>{symbol.toUpperCase()}</Text>
         </View>
 
         <View style={styles.rightWrapper}>
-          <Text style={styles.title}>{currentPrice}</Text>
-          <Text style={[styles.subTitle, { color: "red" }]}>
-            {priceChangePercentage7d}
+          <Text style={styles.title}>{currencyFormat(currentPrice)}</Text>
+          <Text style={[styles.subTitle, { color: { priceChangeColor } }]}>
+            {priceChangePercentage7d.toFixed(2)}%
           </Text>
         </View>
       </View>
     </TouchableOpacity>
   );
+
+  function currencyFormat(num) {
+    return "$" + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  }
 }
 
 const styles = StyleSheet.create({
