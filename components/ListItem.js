@@ -14,10 +14,12 @@ export default function ListItem({
   currentPrice,
   priceChangePercentage7d,
   logoUrl,
+  onPress,
 }) {
   const priceChangeColor = priceChangePercentage7d > 0 ? "green" : "red";
+
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={onPress}>
       <View style={styles.itemWrapper}>
         <View style={styles.leftWrapper}>
           <Image
