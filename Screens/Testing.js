@@ -1,34 +1,17 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-import Animated from "react-native-reanimated";
-import BottomSheet from "reanimated-bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import BottomSheet from "../components/BottomSheet";
 
 export default function Testing() {
-  const sheetRef = React.useRef(null);
-
   return (
-    <>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "papayawhip",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Button
-          title="Open Bottom Sheet"
-          onPress={() => sheetRef.current.snapTo(0)}
-        />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <Text>Hello world</Text>
       </View>
-      <BottomSheet
-        ref={sheetRef}
-        snapPoints={[450, 300, 0]}
-        borderRadius={10}
-        renderContent={renderContent}
-      />
-    </>
+      <BottomSheet />
+    </GestureHandlerRootView>
   );
 }
 
@@ -37,6 +20,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "black",
   },
 });

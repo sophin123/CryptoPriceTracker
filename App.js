@@ -1,7 +1,5 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useRef, useMemo, useState } from "react";
-
-import { Button, LogBox, Modal, Alert } from "react-native";
+import React, { useRef, useMemo, useState, useCallback } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import {
   FlatList,
@@ -11,6 +9,7 @@ import {
   Text,
   View,
   Pressable,
+  Button,
 } from "react-native";
 import ListItem from "./components/ListItem";
 
@@ -20,6 +19,8 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
+import BottomSheet from "./components/BottomSheet";
+import Testing from "./Screens/Testing";
 
 const ListHeader = () => (
   <>
@@ -31,72 +32,56 @@ const ListHeader = () => (
 );
 
 export default function App() {
-  const [modalVisible, setModalVisible] = useState(false);
-  const bottomSheetModalRef = useRef(null);
+  const bottomSheetModalRef = useRef();
 
-  const snapPoints = useMemo(() => ["50%"]);
+  const snapPoints = useMemo(() => ["25%", "50%"], []);
 
-  const handleModal = () => {
-    bottomSheetModalRef.current.present();
-  };
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View
-          style={{
-            position: "absolute",
-            bottom: 0,
-            height: "50%",
-            width: "100%",
-            backgroundColor: "blue",
-          }}
-        >
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-      <FlatList
-        keyExtractor={(item) => item.id}
-        data={SAMPLE_DATA}
-        renderItem={({ item }) => (
-          <ListItem
-            name={item.name}
-            symbol={item.symbol}
-            currentPrice={item.current_price}
-            priceChangePercentage7d={
-              item.price_change_percentage_7d_in_currency
-            }
-            logoUrl={item.image}
-            onPress={() => setModalVisible(true)}
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <BottomSheetModalProvider>
+        <View style={styles.container}>
+          <FlatList
+            keyExtractor={(item) => item.id}
+            data={SAMPLE_DATA}
+            renderItem={({ item }) => (
+              <ListItem
+                name={item.name}
+                symbol={item.symbol}
+                currentPrice={item.current_price}
+                priceChangePercentage7d={
+                  item.price_change_percentage_7d_in_currency
+                }
+                logoUrl={item.image}
+                onPress={() => handlePresentModalPress()}
+              />
+            )}
+            ListHeaderComponent={<ListHeader />}
           />
-        )}
-        ListHeaderComponent={<ListHeader />}
-      />
-    </SafeAreaView>
+
+          <BottomSheetModal
+            ref={bottomSheetModalRef}
+            index={1}
+            snapPoints={snapPoints}
+          >
+            <View style={styles.contentContainer}>
+              <Text>Awesome 🎉</Text>
+            </View>
+          </BottomSheetModal>
+        </View>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    paddingTop: Platform.OS == "android" ? 35 : 0,
+    padding: 24,
+    justifyContent: "center",
   },
   largeTitle: {
     fontSize: 24,
@@ -133,5 +118,9 @@ const styles = StyleSheet.create({
   textStyle: {
     fontSize: 30,
     padding: 10,
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: "center",
   },
 });
