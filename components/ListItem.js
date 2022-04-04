@@ -15,9 +15,8 @@ export default function ListItem({
   priceChangePercentage7d,
   logoUrl,
   onPress,
+  currencyFormat,
 }) {
-  const priceChangeColor = priceChangePercentage7d > 0 ? "green" : "red";
-
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.itemWrapper}>
@@ -37,7 +36,12 @@ export default function ListItem({
 
         <View style={styles.rightWrapper}>
           <Text style={styles.title}>{currencyFormat(currentPrice)}</Text>
-          <Text style={[styles.subTitle, { color: { priceChangeColor } }]}>
+          <Text
+            style={[
+              styles.subTitle,
+              { color: priceChangePercentage7d > 0 ? "green" : "red" },
+            ]}
+          >
             {priceChangePercentage7d.toFixed(2)}%
           </Text>
         </View>
@@ -52,7 +56,7 @@ export default function ListItem({
 
 const styles = StyleSheet.create({
   itemWrapper: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 10,
     marginTop: 24,
     flexDirection: "row",
     justifyContent: "space-between",

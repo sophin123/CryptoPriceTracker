@@ -19,8 +19,7 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
-import BottomSheet from "./components/BottomSheet";
-import Testing from "./Screens/Testing";
+import Chart from "./components/Chart";
 
 const ListHeader = () => (
   <>
@@ -34,12 +33,14 @@ const ListHeader = () => (
 export default function App() {
   const bottomSheetModalRef = useRef();
 
+  const [selectedCoinData, setSelectedCoinData] = useState(null);
+
   const snapPoints = useMemo(() => ["25%", "50%"], []);
 
-  const handlePresentModalPress = useCallback(() => {
+  const openModal = (item) => {
+    setSelectedCoinData(item);
     bottomSheetModalRef.current?.present();
-  }, []);
-
+  };
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <BottomSheetModalProvider>
@@ -56,7 +57,7 @@ export default function App() {
                   item.price_change_percentage_7d_in_currency
                 }
                 logoUrl={item.image}
-                onPress={() => handlePresentModalPress()}
+                onPress={() => openModal(item)}
               />
             )}
             ListHeaderComponent={<ListHeader />}
@@ -66,10 +67,24 @@ export default function App() {
             ref={bottomSheetModalRef}
             index={1}
             snapPoints={snapPoints}
+            style={styles.modalView}
           >
-            <View style={styles.contentContainer}>
-              <Text>Awesome 🎉</Text>
-            </View>
+            {selectedCoinData ? (
+              <Chart
+                currentPrice={selectedCoinData.current_price}
+                logoUrl={selectedCoinData.image}
+                name={selectedCoinData.name}
+                priceChangePercentage7d={
+                  selectedCoinData.price_change_percentage_7d_in_currency
+                }
+                symbol={selectedCoinData.symbol}
+                sparkline={selectedCoinData.sparkline_in_7d.price}
+              />
+            ) : (
+              <View>
+                <Text>Chart Unavailable</Text>
+              </View>
+            )}
           </BottomSheetModal>
         </View>
       </BottomSheetModalProvider>
@@ -89,7 +104,7 @@ const styles = StyleSheet.create({
   },
   titleWraper: {
     marginTop: 20,
-    paddingHorizontal: 16,
+    paddingHorizontal: 10,
   },
   divider: {
     height: StyleSheet.hairlineWidth,
@@ -97,19 +112,13 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   modalView: {
-    margin: 20,
-    backgroundColor: "white",
+    margin: 5,
+    backgroundColor: "black",
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    elevation: 4,
   },
   modalText: {
     marginBottom: 15,
@@ -121,6 +130,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    alignItems: "center",
+  },
+  bottomSheet: {
+    elevation: 9,
   },
 });
