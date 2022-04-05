@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 
+import CurrencyFormat from "./CurrencyFormat";
+
 export default function Chart({
   currentPrice,
   logoUrl,
@@ -15,16 +17,21 @@ export default function Chart({
           <View style={styles.upperLeftTitle}>
             <Image source={{ uri: logoUrl }} style={styles.image} />
             <Text style={styles.subtitle}>
-              {name} ({symbol})
+              {name} ({symbol.toUpperCase()})
             </Text>
           </View>
-
-          <View style={styles.lowerTitle}>
-            <Text>
-              ${currentPrice.toLocaleString("en-US", { currency: "USD" })}
-            </Text>
-            <Text>{priceChangePercentage7d.toFixed(2)}%</Text>
-          </View>
+          <Text style={styles.subtitle}>7d</Text>
+        </View>
+        <View style={styles.lowerTitle}>
+          <Text style={styles.boldTitle}>{CurrencyFormat(currentPrice)}</Text>
+          <Text
+            style={[
+              styles.title,
+              { color: priceChangePercentage7d < 0 ? "red" : "green" },
+            ]}
+          >
+            {priceChangePercentage7d.toFixed(2)}%
+          </Text>
         </View>
       </View>
     </View>
@@ -32,5 +39,38 @@ export default function Chart({
 }
 
 const styles = StyleSheet.create({
-  chartWrapper: {},
+  chartWrapper: {
+    margin: 16,
+  },
+  titleWrapper: {},
+  upperTitles: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  upperLeftTitle: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  image: {
+    width: 24,
+    height: 24,
+    marginRight: 4,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: "#a9abb1",
+  },
+  lowerTitle: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  boldTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  title: {
+    fontSize: 18,
+  },
 });

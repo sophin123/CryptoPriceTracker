@@ -115,8 +115,6 @@ const styles = StyleSheet.create({
     margin: 5,
     backgroundColor: "black",
     borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
     shadowColor: "#000",
     elevation: 4,
   },

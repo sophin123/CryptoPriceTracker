@@ -7,6 +7,7 @@ import {
   Button,
   Image,
 } from "react-native";
+import CurrencyFormat from "./CurrencyFormat";
 
 export default function ListItem({
   name,
@@ -35,7 +36,7 @@ export default function ListItem({
         </View>
 
         <View style={styles.rightWrapper}>
-          <Text style={styles.title}>{currencyFormat(currentPrice)}</Text>
+          <Text style={styles.title}>{CurrencyFormat(currentPrice)}</Text>
           <Text
             style={[
               styles.subTitle,
@@ -48,10 +49,6 @@ export default function ListItem({
       </View>
     </TouchableOpacity>
   );
-
-  function currencyFormat(num) {
-    return "$" + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-  }
 }
 
 const styles = StyleSheet.create({
